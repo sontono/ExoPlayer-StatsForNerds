@@ -701,8 +701,17 @@ public class PlayerActivity extends Activity implements OnClickListener, ExoPlay
             return;
         String buffer = DemoUtil.getFormattedDouble((bufferedDurationMs / Math.pow(10, 6)), 1);
         String brEstimate = DemoUtil.getFormattedDouble((bitrateEstimate / Math.pow(10, 3)), 1);
-        updateStatChart(player_stats_health_chart, Float.parseFloat(buffer), ColorTemplate.getHoloBlue(), "Buffer Health: " + buffer + " s");
-        updateStatChart(player_stats_speed_chart, Float.parseFloat(brEstimate), Color.LTGRAY, "Conn Speed: " + DemoUtil.humanReadableByteCount(
+        float fBuffer = 0f;
+        float fBrEstimate = 0f;
+        try {
+            fBuffer = NumberFormat.getInstance().parse(buffer).floatValue();
+            fBrEstimate = NumberFormat.getInstance().parse(brEstimate).floatValue();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        updateStatChart(player_stats_health_chart, fBuffer, ColorTemplate.getHoloBlue(), "Buffer Health: " + buffer + " s");
+        updateStatChart(player_stats_speed_chart, fBrEstimate, Color.LTGRAY, "Conn Speed: " + DemoUtil.humanReadableByteCount(
                 bitrateEstimate, true, true) + "ps");
         player_stats_size.setText("Screen Dimensions: " + simpleExoPlayerView.getWidth() + " x " + simpleExoPlayerView.getHeight());
         player_stats_res.setText("Video Resolution: " + (null != currentVideoFormat ? (currentVideoFormat.width + " x " + currentVideoFormat.height) : "NA"));
